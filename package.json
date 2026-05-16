@@ -2,13 +2,17 @@
   "name": "xelu-prompts-texture-glyph",
   "version": "1.0.0",
   "description": "\"# xelu-prompts-texture-glyph\"",
-  "main": "pack_glyphs.js",
+  "type": "module",
+  "main": "bin/index.js",
   "scripts": {
+    "build": "tsc && node bin/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "jimp": "^0.22.12"
+    "@types/node": "^25.8.0",
+    "jimp": "^0.22.12",
+    "ts-node": "^10.9.2"
   }
 }

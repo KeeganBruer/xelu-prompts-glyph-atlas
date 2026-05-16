@@ -1,0 +1,45 @@
+name: Build & Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag (e.g. v1.0.0)"
+        required: true
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build atlas
+        run: npm run build
+
+      - name: Zip release artifacts
+        run: zip -j glyph-atlas.zip out/glyph_atlas.png out/glyph_atlas_labeled.png out/README.md
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.tag || github.ref_name }}
+          name: "Glyph Atlas ${{ github.event.inputs.tag || github.ref_name }}"
+          body_path: out/README.md
+          files: |
+            glyph-atlas.zip
+            out/glyph_atlas.png
+            out/glyph_atlas_labeled.png
